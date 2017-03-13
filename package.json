@@ -1,0 +1,8 @@
+{
+  "name": "iot-graduation-project",
+  "description": "iot-graduation-project",
+  "dependencies": {
+    "express": "^4.14.1",
+    "socket.io": "^1.7.2"
+  }
+}
