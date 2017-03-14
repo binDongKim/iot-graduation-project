@@ -22,15 +22,32 @@ var pool = mysql.createPool({
 });
 
 /*
-  map 구현하기
-  1. Empty Map
-  2. 아두이노에서 가져온 id로 map을 먼저 조회
-  i) map에 데이터가 존재 -> 그 데이터사용
-  ii) 존재x -> DB에서 가져오고 map에도 채움
-  3. DB업데이트시 Map도 업데이트
+  1. DB에서 미리 데이터를 가져와서 Map에 세팅한다.
+  2. Browser와의 데이터교환은 Map을 통해서만 한다.
 */
-
 var productMap = new Map(); // DB에서 가져올 Product정보들을 담기위한 Map
+
+function getProducts() {
+  return new Promise(function(resolve, reject) {
+    var columns = ['id', 'name', 'brand', 'image'];
+    pool.query('SELECT ?? FROM Product', [columns]).then(function(results) {
+      resolve(results);
+    });
+  });
+}
+getProducts().then(function(results) {
+  results.forEach(function(result) {
+    var product = new Object();
+    product.id = result.id;
+    product.name = result.name;
+    product.brand = result.brand;
+    product.image = result.image;
+    product.count = 0;
+    productMap.set(result.id, product);
+  });
+}, function(err) {
+  console.log('Error: ' + err);
+});
 
 // Net module을 통한 서버 instance생성
 var netServer = net.createServer(function(netSocket) {
@@ -45,6 +62,8 @@ var netServer = net.createServer(function(netSocket) {
     var didPickup = strData[2].charAt(0) == "O" ? true : false;
 
     pool.query('UPDATE Product SET count = ? WHERE id = ?', [productCount,productId]).then(function(changedRows) {
+      // update -> select -> Map Set후에 시작하는걸로 해야하나?
+      // count(진열갯수)는 굳이 DB에 필요없을것 같은데, DB Update생략할까?
       console.log("ProductId: " + productId + "가 Update됨");
       io.on('connection', function(socketIo) {
         socketIo.emit('productCount-updated', productCount);
