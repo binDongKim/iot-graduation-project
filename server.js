@@ -62,31 +62,11 @@ var netServer = net.createServer(function(netSocket) {
     var didPickup = strData[2].charAt(0) == "O" ? true : false;
 
     productMap.get(productId).count = productCount;
-    io.emit('productCount-updated', productCount); // 해당 상품의 진열갯수가 변함을 전달
+    io.emit('productCount-updated', productCount); // 진열대위의 상품갯수를 전달
 
     // 소비자가 물건을 집어들었을때만
     if(didPickup) {
-      var columns = ['id', 'name', 'brand', 'image'];
-      Promise.resolve(productMap.get(productId))
-      .then(function(result) {
-        if(result === undefined) {
-          return pool.query('SELECT ?? FROM Product WHERE id = ?', [columns, productId]).then(function(result) {
-            return Promise.resolve(result[0]);
-          });
-        }
-        else {
-          return Promise.resolve(result);
-        }
-      })
-      .then(function(result) {
-        productMap.set(productId, result);
-        io.emit('data-received', productMap.get(productId));
-      }, function(err) {
-        console.log('Error: ' + err);
-      })
-      .catch(function(err) {
-        console.log('Caught Error: ' + err);
-      });
+      io.emit('data-received', productMap.get(productId)); // 소비자가 집어든 상품정보를 전달
     }
   });
   // client와 접속이 끊기는 메시지 출력
