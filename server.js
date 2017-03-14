@@ -61,16 +61,8 @@ var netServer = net.createServer(function(netSocket) {
     var productCount = strData[1];
     var didPickup = strData[2].charAt(0) == "O" ? true : false;
 
-    pool.query('UPDATE Product SET count = ? WHERE id = ?', [productCount,productId]).then(function(changedRows) {
-      // update -> select -> Map Set후에 시작하는걸로 해야하나?
-      // count(진열갯수)는 굳이 DB에 필요없을것 같은데, DB Update생략할까?
-      console.log("ProductId: " + productId + "가 Update됨");
-      io.on('connection', function(socketIo) {
-        socketIo.emit('productCount-updated', productCount);
-      });
-    }, function(err) {
-      console.log("Error: " + err);
-    });
+    productMap.get(productId).count = productCount;
+    io.emit('productCount-updated', productCount); // 해당 상품의 진열갯수가 변함을 전달
 
     // 소비자가 물건을 집어들었을때만
     if(didPickup) {
