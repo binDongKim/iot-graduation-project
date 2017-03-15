@@ -1,6 +1,6 @@
 var socket = io.connect('http://localhost:3000');
 socket.on('product-moved', function(product) {
-
+  document.getElementById(product.id).innerHTML = product.count;
 });
 
 socket.on('product-info', function(products) {
@@ -9,7 +9,7 @@ socket.on('product-info', function(products) {
                     + '<ul class="list-group">';
   Object.keys(products).forEach(function(productId) {
     productsDOM += '<li class="list-group-item">'
-    + '<span class="badge">' + products[productId].count + '</span>'
+    + '<span id="' + productId + '" class="badge">' + products[productId].count + '</span>'
     + products[productId].name + '</li>';
   });
   productsDOM += '</ul></div>';
