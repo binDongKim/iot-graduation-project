@@ -23,12 +23,7 @@ var pool = mysql.createPool({
   database: "graduation_project"
 });
 
-/*
-  1. DB에서 미리 데이터를 가져와서 Map에 세팅한다.
-  2. Browser와의 데이터교환은 productObj을 통해서만 한다.
-*/
-var productMap = new Map(); // DB에서 가져올 Product정보들을 담기위한 Map
-var productObj = new Object(); // Client로 Product정보를 담아보낼 Object
+var products = new Object(); // product들을 담을 Object
 
 function getProducts() {
   return new Promise(function(resolve, reject) {
@@ -46,19 +41,18 @@ getProducts().then(function(results) {
     product.brand = result.brand;
     product.image = result.image;
     product.count = 0;
-    productMap.set(result.id, product);
+    product.pickedUp = false;
+    products[result.id] = product;
   });
 }, function(err) {
   console.log('Error: ' + err);
-}).then(function() {
-  mapIntoObject(productMap);
 });
 
-function mapIntoObject(map) {
-  Array.from(map.keys()).forEach(function(key) {
-   productObj[key] = map.get(key);
-  });
-}
+// function mapIntoObject(map) {
+//   Array.from(map.keys()).forEach(function(key) {
+//    productObj[key] = map.get(key);
+//   });
+// }
 
 // Net module을 통한 서버 instance생성
 var netServer = net.createServer(function(netSocket) {
@@ -69,15 +63,10 @@ var netServer = net.createServer(function(netSocket) {
     var strData = data.toString().split("_"); // strData[0]: productId, strData[1]: productCount, strData[2]: didPickup or not
     var productId = strData[0];
     var productCount = strData[1];
-    var didPickup = strData[2].charAt(0) == "O" ? true : false;
 
-    productMap.get(productId).count = productCount;
-    io.emit('productCount-updated', productCount); // 진열대위의 상품갯수를 전달
-
-    // 소비자가 물건을 집어들었을때만
-    if(didPickup) {
-      io.emit('data-received', productObj[productId]); // 소비자가 집어든 상품정보를 전달
-    }
+    products[productId].pickedUp = strData[2].charAt(0) == "O" ? true : false;
+    products[productId].count = productCount;
+    io.emit('product-moved', products[productId]); // 진열대(센서) 위의 상품이 움직임(소비자가 집어들었거나/올려놨거나)
   });
   // client와 접속이 끊기는 메시지 출력
   netSocket.on('close', function() {
@@ -102,7 +91,7 @@ app.get('/customer', function(req, res) {
 app.get('/manager', function(req, res) {
   res.sendFile(__dirname + '/public/html/manager.html');
   io.on('connection', function(socket) {
-    socket.emit('product-info', productObj);
+    socket.emit('product-info', products);
   });
 });
 
