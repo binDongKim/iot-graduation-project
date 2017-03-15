@@ -26,6 +26,7 @@ var pool = mysql.createPool({
   2. Browser와의 데이터교환은 Map을 통해서만 한다.
 */
 var productMap = new Map(); // DB에서 가져올 Product정보들을 담기위한 Map
+var productObj = new Object(); // Client로 Product정보를 담아보낼 Object
 
 function getProducts() {
   return new Promise(function(resolve, reject) {
@@ -47,7 +48,15 @@ getProducts().then(function(results) {
   });
 }, function(err) {
   console.log('Error: ' + err);
+}).then(function() {
+  mapIntoObject(productMap);
 });
+
+function mapIntoObject(map) {
+  Array.from(map.keys()).forEach(function(key) {
+   productObj[key] = map.get(key);
+  });
+}
 
 // Net module을 통한 서버 instance생성
 var netServer = net.createServer(function(netSocket) {
