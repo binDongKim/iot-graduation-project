@@ -75,7 +75,7 @@ var netServer = net.createServer(function(netSocket) {
 
     // 소비자가 물건을 집어들었을때만
     if(didPickup) {
-      io.emit('data-received', productMap.get(productId)); // 소비자가 집어든 상품정보를 전달
+      io.emit('data-received', productObj[productId]); // 소비자가 집어든 상품정보를 전달
     }
   });
   // client와 접속이 끊기는 메시지 출력
@@ -97,8 +97,14 @@ netServer.listen(5000, function() {
 
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function(req, res) {
+app.get('/customer', function(req, res) {
   res.sendFile(__dirname + '/public/html/customer.html');
+});
+app.get('/manager', function(req, res) {
+  res.sendFile(__dirname + '/public/html/manager.html');
+  io.on('connection', function(socket) {
+    socket.emit('product-info', productObj);
+  });
 });
 
 http.listen(3000, function() {
