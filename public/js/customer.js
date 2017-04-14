@@ -25,3 +25,20 @@ socket.on('product-moved', function(product) {
     container[0].innerHTML = productInfoDOM;
   }
 });
+var itemCount = 2;
+var buttons = document.querySelectorAll('button');
+buttons.forEach(function(button) {
+  button.addEventListener('click', function() {
+    var upOrdown = parseInt(button.dataset.count);
+    itemCount += upOrdown;
+    var upOrdownFlag = 0 > upOrdown ? 'O' : 'X';
+    var data = '0_' + itemCount + '_' + upOrdownFlag;
+    fetch('/productMoved', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({data: data})
+    }).then((message) => { console.log(message); });
+  });
+});

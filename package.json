@@ -2,6 +2,7 @@
   "name": "iot-graduation-project",
   "description": "iot-graduation-project",
   "dependencies": {
+    "body-parser": "^1.17.1",
     "express": "^4.14.1",
     "socket.io": "^1.7.2"
   }
