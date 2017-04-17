@@ -8,6 +8,47 @@
   </head>
   <body>
     <div class="container">
+      <section class="sectors">
+        <div class="panel panel-default">
+          <div class="panel-heading">매장내 상품배치도</div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="panel panel-default">
+                <ul class="list-group">
+                  <li class="list-group-item"><span class="badge"></span>동원참치</li>
+                  <li class="list-group-item"><span class="badge"></span>오뚜기참치</li>
+                </ul>
+              </div>
+              <div class="panel panel-default">
+                <ul class="list-group">
+                  <li class="list-group-item"><span class="badge"></span>진라면</li>
+                  <li class="list-group-item"><span class="badge"></span>너구리</li>
+                </ul>
+              </div>
+              <div class="panel panel-default">
+                <ul class="list-group">
+                  <li class="list-group-item"><span class="badge"></span>돌솥김</li>
+                  <li class="list-group-item"><span class="badge"></span>양반김</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-4 right-items">
+              <div class="panel panel-default">
+                <ul class="list-group">
+                  <li class="list-group-item"><span class="badge"></span>감자깡</li>
+                  <li class="list-group-item"><span class="badge"></span>새우깡</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <aside>
+        <div class="panel panel-default">
+          <div class="panel-heading">전체 상품 리스트</div>
+          <ul class="list-group-item" id="productList"></ul>
+        </div>
+      </aside>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>

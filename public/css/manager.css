@@ -1,11 +1,47 @@
 html {
   text-align: center;
 }
+
 html, body, .container {
   height: 100%;
 }
+
 .container {
+  width: 100%;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  // width: 85%;
+  // margin: auto;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+section {
+  float: left;
+  width: 900px;
+}
+
+section .panel-heading {
+  margin-bottom: 32px;
+}
+
+.right-items {
+  height: 313px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.right-items .panel-default {
+  width: 100%;
+}
+
+aside {
+  float: right;
+  width: 250px;
+}
+
+.panel {
+  margin-bottom: 32px;
 }

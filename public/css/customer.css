@@ -1,14 +1,16 @@
 html {
   text-align: center;
 }
+
 html, body, .container {
   height: 100%;
 }
+
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 85%;
+  // width: 85%;
   margin: auto;
 }
 
