@@ -8,4 +8,24 @@ html, body, .container {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 85%;
+  margin: auto;
+}
+
+img {
+  width: 300px;
+  margin: auto;
+}
+.table {
+  margin-bottom: 0px;
+}
+
+.table td {
+  vertical-align: middle !important;
+}
+
+.table th {
+  width: 70px;
+  vertical-align: middle !important;
+  text-align: center;
 }
