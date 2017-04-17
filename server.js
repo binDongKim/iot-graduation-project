@@ -31,7 +31,7 @@ var products = new Object(); // product들을 담을 Object
 
 function getProducts() {
   return new Promise(function(resolve, reject) {
-    var columns = ['id', 'name', 'brand', 'image', 'price', 'amount', 'nutrients'];
+    var columns = ['id', 'name', 'brand', 'image', 'price', 'amount', 'nutrients', 'countset'];
     pool.query('SELECT ?? FROM Product', [columns]).then(function(results) {
       resolve(results);
     });
@@ -47,6 +47,7 @@ getProducts().then(function(results) {
     product.price = result.price;
     product.amount = result.amount;
     product.nutrients = result.nutrients;
+    product.countSet = result.countset;
     product.count = 0;
     product.pickedUp = false;
     products[result.id] = product;
