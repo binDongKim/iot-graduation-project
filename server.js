@@ -31,7 +31,7 @@ var products = new Object(); // product들을 담을 Object
 
 function getProducts() {
   return new Promise(function(resolve, reject) {
-    var columns = ['id', 'name', 'brand', 'image'];
+    var columns = ['id', 'name', 'brand', 'image', 'price', 'amount', 'nutrients'];
     pool.query('SELECT ?? FROM Product', [columns]).then(function(results) {
       resolve(results);
     });
@@ -44,6 +44,9 @@ getProducts().then(function(results) {
     product.name = result.name;
     product.brand = result.brand;
     product.image = result.image;
+    product.price = result.price;
+    product.amount = result.amount;
+    product.nutrients = result.nutrients;
     product.count = 0;
     product.pickedUp = false;
     products[result.id] = product;
@@ -95,7 +98,7 @@ app.get('/manager', function(req, res) {
   });
 });
 app.post('/productMoved', function(req, res) {
-  console.log(req.body.data);
+  console.log(req.body);
   var strData = req.body.data.split('_'); // strData[0]: productId, strData[1]: productCount, strData[2]: didPickup or not
   var productId = strData[0];
   var productCount = strData[1];
@@ -103,7 +106,7 @@ app.post('/productMoved', function(req, res) {
   products[productId].pickedUp = strData[2].charAt(0) == 'O' ? true : false;
   products[productId].count = productCount;
   io.emit('product-moved', products[productId]); // 진열대(센서) 위의 상품이 움직임(소비자가 집어들었거나/올려놨거나)
-  res.send('Success');
+  res.send('Ok');
 });
 
 http.listen(3000, function() {
